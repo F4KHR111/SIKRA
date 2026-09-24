@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Sistem Informasi Inspeksi Kendaraan (SIKRA)",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "node -e \"const fs = require('fs'); const cp = require('child_process'); if (fs.existsSync('frontend')) { cp.execSync('cd frontend && npm install && npm run build', {stdio: 'inherit'}); } else { console.log('Backend build ready'); }\"",
     "install-all": "cd backend && npm install && cd ../frontend && npm install"
   },
   "engines": {
