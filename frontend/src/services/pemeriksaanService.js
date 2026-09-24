@@ -1,0 +1,78 @@
+import api from "./api";
+
+const config = () => ({
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+});
+
+const getAll = async () => {
+
+    const response = await api.get(
+        "/pemeriksaan",
+        config()
+    );
+
+    return response.data.data;
+
+};
+
+const getById = async (id) => {
+
+    const response = await api.get(
+        `/pemeriksaan/${id}`,
+        config()
+    );
+
+    return response.data.data;
+
+};
+
+const create = async (data) => {
+
+    const response = await api.post(
+        "/pemeriksaan",
+        data,
+        config()
+    );
+
+    return response.data;
+
+};
+
+const update = async (id, data) => {
+
+    const response = await api.put(
+        `/pemeriksaan/${id}`,
+        data,
+        config()
+    );
+
+    return response.data;
+
+};
+
+const remove = async (id) => {
+
+    const response = await api.delete(
+        `/pemeriksaan/${id}`,
+        config()
+    );
+
+    return response.data;
+
+};
+
+export default {
+
+    getAll,
+
+    getById,
+
+    create,
+
+    update,
+
+    remove
+
+};

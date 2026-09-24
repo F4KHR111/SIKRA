@@ -1,0 +1,54 @@
+# ============================================================
+# Root .gitignore untuk SIKRA (Sistem Inspeksi Kendaraan)
+# ============================================================
+
+# 1. Kredensial & Secrets (DILARANG DIPUBLISH KE GITHUB)
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+*.pem
+*.key
+*.cert
+
+# 2. Dependency Folder
+node_modules/
+*/node_modules/
+
+# 3. Build & Output Files
+dist/
+dist-ssr/
+build/
+out/
+*/dist/
+
+# 4. Arsip & File Kompresi
+*.7z
+*.zip
+*.tar.gz
+*.rar
+backend.7z
+
+# 5. File Upload Dinamis / Media Sementara
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# 6. Logs & Debugger
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 7. OS & Editor Cache
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
