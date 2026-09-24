@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// Di Vercel: API tersedia di /api (same domain, no CORS issue)
-// Di lokal (npm run dev): gunakan VITE_API_URL dari .env  
-const baseURL = import.meta.env.VITE_API_URL || "/api";
+// Default ke backend live Vercel
+const baseURL = import.meta.env.VITE_API_URL || "https://backend-pi-nine-25.vercel.app/api";
 
 const api = axios.create({
     baseURL,
