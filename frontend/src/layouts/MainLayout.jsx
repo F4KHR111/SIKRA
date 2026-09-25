@@ -20,6 +20,7 @@ import {
     FaBars,
     FaTimes
 } from "react-icons/fa";
+import logoSikra from "../assets/logo/logo_sikra.png";
 
 function MainLayout() {
 
@@ -127,15 +128,27 @@ function MainLayout() {
 
                         {/* Brand Logo & Title */}
                         <Link to="/dashboard" className="d-flex align-items-center gap-3 text-decoration-none">
-                            <div className="corporate-logo-icon">
-                                <FaShieldAlt />
+                            <div
+                                className="d-flex align-items-center justify-content-center bg-white rounded-3 shadow-xs p-1"
+                                style={{
+                                    height: "44px",
+                                    width: "84px",
+                                    overflow: "hidden"
+                                }}
+                            >
+                                <img
+                                    src={logoSikra}
+                                    alt="Logo SIKRA"
+                                    style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                                />
                             </div>
                             <div>
-                                <div className="fw-bold text-white" style={{ fontSize: "17px", letterSpacing: "-0.02em", lineHeight: "1.2" }}>
-                                    SIK KENDARAAN
+                                <div className="fw-bold text-white d-flex align-items-center gap-2" style={{ fontSize: "18px", letterSpacing: "-0.01em", lineHeight: "1.2" }}>
+                                    <span>SIKRA</span>
+                                    <span className="badge bg-primary text-white" style={{ fontSize: "9px", padding: "2px 6px", letterSpacing: "0.05em" }}>OPERASIONAL</span>
                                 </div>
                                 <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "500", letterSpacing: "0.02em" }}>
-                                    Sistem Inspeksi Kendaraan Operasional
+                                    Sistem Inspeksi Kendaraan Rekapitulasi Armada
                                 </div>
                             </div>
                         </Link>
@@ -267,7 +280,7 @@ function MainLayout() {
                         </div>
                         <div className="d-none d-sm-block">
                             <span className="badge badge-corporate-neutral" style={{ fontSize: "11px", fontWeight: "500" }}>
-                                SIK Portal / {pageMeta.title}
+                                SIKRA Portal / {pageMeta.title}
                             </span>
                         </div>
                     </div>
@@ -283,11 +296,14 @@ function MainLayout() {
             <footer className="corporate-footer">
                 <div className="container-fluid px-3 px-lg-5">
                     <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
-                        <div>
-                            <strong>SIK Kendaraan</strong> • Sistem Informasi Inspeksi Kelayakan Armada Operasional
+                        <div className="d-flex align-items-center gap-2">
+                            <img src={logoSikra} alt="SIKRA" style={{ height: "22px", width: "auto", objectFit: "contain" }} />
+                            <div>
+                                <strong>SIKRA</strong> • Sistem Inspeksi Kendaraan Rekapitulasi Armada
+                            </div>
                         </div>
-                        <div className="text-muted">
-                            © {new Date().getFullYear()} Kementerian / Instansi Pemerintah • Hak Cipta Dilindungi
+                        <div className="text-muted small">
+                            © {new Date().getFullYear()} Istana Kepresidenan Yogyakarta • Hak Cipta Dilindungi
                         </div>
                     </div>
                 </div>

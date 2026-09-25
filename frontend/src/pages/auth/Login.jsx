@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaShieldAlt, FaCar, FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import authService from "../../services/authService";
+import logoSikra from "../../assets/logo/logo_sikra.png";
 
 function Login() {
 
@@ -62,24 +63,25 @@ function Login() {
                 {/* Brand Header */}
                 <div className="text-center mb-4">
                     <div
-                        className="mx-auto mb-3 d-flex align-items-center justify-content-center"
+                        className="mx-auto mb-3 d-flex align-items-center justify-content-center bg-white shadow-lg"
                         style={{
-                            width: "64px",
-                            height: "64px",
-                            background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                            maxWidth: "200px",
+                            height: "76px",
                             borderRadius: "16px",
-                            color: "#ffffff",
-                            fontSize: "28px",
-                            boxShadow: "0 8px 20px rgba(37, 99, 235, 0.4)"
+                            padding: "8px 16px"
                         }}
                     >
-                        <FaShieldAlt />
+                        <img
+                            src={logoSikra}
+                            alt="Logo SIKRA - Gedung Agung Istana Kepresidenan Yogyakarta"
+                            style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain" }}
+                        />
                     </div>
                     <h3 className="fw-bold text-white mb-1" style={{ letterSpacing: "-0.02em" }}>
-                        SIK KENDARAAN
+                        SIKRA
                     </h3>
                     <p className="text-light opacity-75 mb-0" style={{ fontSize: "14px" }}>
-                        Sistem Informasi Inspeksi Kendaraan Operasional
+                        Sistem Inspeksi Kendaraan Rekapitulasi Armada
                     </p>
                 </div>
 
@@ -220,7 +222,7 @@ function Login() {
 
                 {/* Footer Copy */}
                 <div className="text-center mt-4 text-white-50 small">
-                    © {new Date().getFullYear()} Sistem Inspeksi Kendaraan • Hak Cipta Dilindungi
+                    © {new Date().getFullYear()} SIKRA • Istana Kepresidenan Yogyakarta
                 </div>
 
             </div>

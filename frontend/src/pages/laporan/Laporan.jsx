@@ -8,7 +8,7 @@ import kategoriService from "../../services/kategoriService";
 import itemService from "../../services/itemService";
 import statusService from "../../services/statusService";
 import { PRESET_ASAL_KENDARAAN } from "../../utils/constants";
-import logoKemensetneg from "../../assets/logo/logokemensetneg.png";
+import logoSikra from "../../assets/logo/logo_sikra.png";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 
@@ -225,8 +225,8 @@ function Laporan() {
                 hasil: detailHasil
             });
 
-            // Siapkan daftar gambar yang harus di-preload (Logo Kemensetneg & Foto Kendaraan)
-            const imagesToLoad = [logoKemensetneg];
+            // Siapkan daftar gambar yang harus di-preload (Logo SIKRA / Istana & Foto Kendaraan)
+            const imagesToLoad = [logoSikra];
             if (data.foto) {
                 imagesToLoad.push(getPhotoUrl(data.foto));
             }
@@ -864,7 +864,7 @@ function Laporan() {
                     <div className="print-single-container">
                         {/* Kop Surat Instansi */}
                         <div className="print-header">
-                            <img src={logoKemensetneg} alt="Logo" className="print-logo" />
+                            <img src={logoSikra} alt="Logo Gedung Agung Istana Kepresidenan Yogyakarta" className="print-logo" style={{ maxWidth: "120px", height: "auto", objectFit: "contain" }} />
                             <div className="print-header-text">
                                 <h5>KEMENTERIAN SEKRETARIAT NEGARA RI</h5>
                                 <h4>SEKRETARIAT PRESIDEN</h4>
