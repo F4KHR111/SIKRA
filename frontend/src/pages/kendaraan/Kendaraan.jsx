@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { FaIdCard, FaExclamationTriangle, FaCalendarAlt, FaCheckCircle, FaCar } from "react-icons/fa";
 import kendaraanService from "../../services/kendaraanService";
 import { PRESET_ASAL_KENDARAAN } from "../../utils/constants";
 
@@ -41,7 +42,9 @@ function Kendaraan() {
         plat_hitam: "",
         nomor_rangka: "",
         nomor_mesin: "",
-        foto: ""
+        foto: "",
+        stnk_tahunan: "",
+        stnk_lima_tahunan: ""
     });
 
     const [asalDropdown, setAsalDropdown] = useState("");
@@ -59,7 +62,9 @@ function Kendaraan() {
             plat_hitam: "",
             nomor_rangka: "",
             nomor_mesin: "",
-            foto: ""
+            foto: "",
+            stnk_tahunan: "",
+            stnk_lima_tahunan: ""
         });
 
         setAsalDropdown("");
@@ -194,7 +199,9 @@ function Kendaraan() {
                 plat_hitam: data.plat_hitam || "",
                 nomor_rangka: data.nomor_rangka || "",
                 nomor_mesin: data.nomor_mesin || "",
-                foto: data.foto || ""
+                foto: data.foto || "",
+                stnk_tahunan: data.stnk_tahunan ? data.stnk_tahunan.split("T")[0] : "",
+                stnk_lima_tahunan: data.stnk_lima_tahunan ? data.stnk_lima_tahunan.split("T")[0] : ""
             });
 
             if (data.asal_kendaraan) {
@@ -241,6 +248,8 @@ function Kendaraan() {
             formData.append("plat_hitam", form.plat_hitam);
             formData.append("nomor_rangka", form.nomor_rangka);
             formData.append("nomor_mesin", form.nomor_mesin);
+            formData.append("stnk_tahunan", form.stnk_tahunan || "");
+            formData.append("stnk_lima_tahunan", form.stnk_lima_tahunan || "");
             
             if (form.foto instanceof File) {
                 formData.append("foto", form.foto);
@@ -355,6 +364,47 @@ function Kendaraan() {
 
     };
 
+    const getStnkBadge = (dateStr) => {
+        if (!dateStr) {
+            return <span className="badge bg-light text-muted border py-1 px-2" style={{ fontSize: "11px" }}>Belum Diisi</span>;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const target = new Date(dateStr);
+        target.setHours(0, 0, 0, 0);
+        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+        const formatted = target.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+
+        if (diffDays < 0) {
+            return (
+                <span className="badge bg-danger py-1 px-2" title={`Kedaluwarsa ${Math.abs(diffDays)} hari yang lalu`} style={{ fontSize: "11px" }}>
+                    Lewat {Math.abs(diffDays)} hr ({formatted})
+                </span>
+            );
+        } else if (diffDays <= 30) {
+            return (
+                <span className="badge bg-warning text-dark py-1 px-2" title={`Jatuh tempo dalam ${diffDays} hari`} style={{ fontSize: "11px" }}>
+                    Sisa {diffDays} hr ({formatted})
+                </span>
+            );
+        } else if (diffDays <= 365) {
+            const months = Math.ceil(diffDays / 30);
+            return (
+                <span className="badge py-1 px-2" style={{ backgroundColor: "#fef3c7", color: "#92400e", border: "1px solid #fde68a", fontSize: "11px" }} title={`Jatuh tempo dalam ${diffDays} hari (~${months} bulan)`}>
+                    ~{months} bln ({formatted})
+                </span>
+            );
+        } else {
+            return (
+                <span className="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" title={`Aktif (${formatted})`} style={{ fontSize: "11px" }}>
+                    {formatted}
+                </span>
+            );
+        }
+    };
+
     return (
 
         <div className="container-fluid">
@@ -456,7 +506,9 @@ function Kendaraan() {
 
                                         <th>Plat Hitam</th>
 
-                                        <th width="220">Aksi</th>
+                                        <th width="200">Masa Berlaku STNK</th>
+
+                                        <th width="200">Aksi</th>
 
                                     </tr>
 
@@ -502,13 +554,28 @@ function Kendaraan() {
 
                                                 <td>
 
-                                                    {item.plat_merah}
+                                                    <span className="fw-semibold text-danger">{item.plat_merah}</span>
 
                                                 </td>
 
                                                 <td>
 
-                                                    {item.plat_hitam}
+                                                    <span className="fw-semibold text-dark">{item.plat_hitam || "-"}</span>
+
+                                                </td>
+
+                                                <td>
+
+                                                    <div className="d-flex flex-column gap-1" style={{ fontSize: "11px" }}>
+                                                        <div className="d-flex align-items-center justify-content-between gap-1">
+                                                            <span className="text-muted fw-semibold">1 Th:</span>
+                                                            {getStnkBadge(item.stnk_tahunan)}
+                                                        </div>
+                                                        <div className="d-flex align-items-center justify-content-between gap-1">
+                                                            <span className="text-muted fw-semibold">5 Th:</span>
+                                                            {getStnkBadge(item.stnk_lima_tahunan)}
+                                                        </div>
+                                                    </div>
 
                                                 </td>
 
@@ -797,6 +864,56 @@ function Kendaraan() {
 
                                         </div>
 
+                                        {/* Section Masa Berlaku Dokumen STNK */}
+                                        <div className="col-12 mb-3">
+                                            <div className="p-3 rounded-3" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+                                                <div className="d-flex align-items-center gap-2 mb-1">
+                                                    <FaIdCard className="text-primary" />
+                                                    <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: "14px" }}>
+                                                        Masa Berlaku Dokumen STNK
+                                                    </h6>
+                                                    <span className="badge bg-primary-subtle text-primary border border-primary-subtle" style={{ fontSize: "10px" }}>
+                                                        Peringatan Otomatis
+                                                    </span>
+                                                </div>
+                                                <p className="text-muted mb-3" style={{ fontSize: "12px" }}>
+                                                    Sistem otomatis memicu peringatan di Dashboard jika masa berlaku tinggal ≤ 1 tahun atau mendekati jatuh tempo.
+                                                </p>
+                                                <div className="row g-3">
+                                                    <div className="col-md-6">
+                                                        <label className="form-label fw-semibold text-dark" style={{ fontSize: "13px" }}>
+                                                            Pajak 1 Tahunan (PKB)
+                                                        </label>
+                                                        <input
+                                                            type="date"
+                                                            className="form-control"
+                                                            name="stnk_tahunan"
+                                                            value={form.stnk_tahunan}
+                                                            onChange={handleChange}
+                                                        />
+                                                        <small className="text-muted" style={{ fontSize: "11px" }}>
+                                                            Jatuh tempo pembayaran pajak tahunan
+                                                        </small>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <label className="form-label fw-semibold text-dark" style={{ fontSize: "13px" }}>
+                                                            STNK 5 Tahunan (Ganti Plat)
+                                                        </label>
+                                                        <input
+                                                            type="date"
+                                                            className="form-control"
+                                                            name="stnk_lima_tahunan"
+                                                            value={form.stnk_lima_tahunan}
+                                                            onChange={handleChange}
+                                                        />
+                                                        <small className="text-muted" style={{ fontSize: "11px" }}>
+                                                            Jatuh tempo pergantian plat nomor & STNK 5 tahunan
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {/* Foto */}
                                         <div className="col-md-12 mb-3">
 
@@ -946,6 +1063,24 @@ function Kendaraan() {
                                         <tr>
                                             <th>Nomor Mesin</th>
                                             <td>{detailData.nomor_mesin || "-"}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Masa Berlaku Pajak 1 Tahun</th>
+                                            <td>
+                                                <div className="d-flex align-items-center gap-2">
+                                                    {getStnkBadge(detailData.stnk_tahunan)}
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Masa Berlaku STNK 5 Tahun</th>
+                                            <td>
+                                                <div className="d-flex align-items-center gap-2">
+                                                    {getStnkBadge(detailData.stnk_lima_tahunan)}
+                                                </div>
+                                            </td>
                                         </tr>
 
                                         <tr>

@@ -62,6 +62,8 @@ async function runPostgresMigration() {
                 nomor_rangka VARCHAR(100) DEFAULT NULL,
                 nomor_mesin VARCHAR(100) DEFAULT NULL,
                 foto VARCHAR(255) DEFAULT NULL,
+                stnk_tahunan DATE DEFAULT NULL,
+                stnk_lima_tahunan DATE DEFAULT NULL,
                 created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
             );

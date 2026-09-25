@@ -1,7 +1,6 @@
 const db = require("../config/db");
 
 const getAll = async () => {
-
     const [rows] = await db.query(`
         SELECT
             id,
@@ -15,6 +14,8 @@ const getAll = async () => {
             nomor_rangka,
             nomor_mesin,
             foto,
+            stnk_tahunan,
+            stnk_lima_tahunan,
             created_at,
             updated_at
         FROM kendaraan
@@ -24,9 +25,7 @@ const getAll = async () => {
     return rows;
 };
 
-
 const getById = async (id) => {
-
     const [rows] = await db.query(
         `
         SELECT
@@ -41,6 +40,8 @@ const getById = async (id) => {
             nomor_rangka,
             nomor_mesin,
             foto,
+            stnk_tahunan,
+            stnk_lima_tahunan,
             created_at,
             updated_at
         FROM kendaraan
@@ -52,11 +53,7 @@ const getById = async (id) => {
     return rows[0];
 };
 
-
-
-
 const create = async (data) => {
-
     const [result] = await db.query(
         `
         INSERT INTO kendaraan
@@ -70,9 +67,11 @@ const create = async (data) => {
             plat_hitam,
             nomor_rangka,
             nomor_mesin,
-            foto
+            foto,
+            stnk_tahunan,
+            stnk_lima_tahunan
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         [
             data.jenis_kendaraan,
@@ -84,20 +83,16 @@ const create = async (data) => {
             data.plat_hitam,
             data.nomor_rangka,
             data.nomor_mesin,
-            data.foto
+            data.foto,
+            data.stnk_tahunan || null,
+            data.stnk_lima_tahunan || null
         ]
     );
 
     return result.insertId;
 };
 
-
-
-
-
-
 const getByPlatMerah = async (plat) => {
-
     const [rows] = await db.query(
         "SELECT id FROM kendaraan WHERE plat_merah = ?",
         [plat]
@@ -106,9 +101,7 @@ const getByPlatMerah = async (plat) => {
     return rows[0];
 };
 
-
 const update = async (id, data) => {
-
     await db.query(
         `
         UPDATE kendaraan
@@ -122,7 +115,9 @@ const update = async (id, data) => {
             plat_hitam = ?,
             nomor_rangka = ?,
             nomor_mesin = ?,
-            foto = ?
+            foto = ?,
+            stnk_tahunan = ?,
+            stnk_lima_tahunan = ?
         WHERE id = ?
         `,
         [
@@ -136,6 +131,8 @@ const update = async (id, data) => {
             data.nomor_rangka,
             data.nomor_mesin,
             data.foto,
+            data.stnk_tahunan || null,
+            data.stnk_lima_tahunan || null,
             id
         ]
     );
@@ -143,18 +140,14 @@ const update = async (id, data) => {
     return await getById(id);
 };
 
-
 const remove = async (id) => {
-
     const [result] = await db.query(
         "DELETE FROM kendaraan WHERE id = ?",
         [id]
     );
 
     return result.affectedRows;
-
 };
-
 
 module.exports = {
     getAll,
