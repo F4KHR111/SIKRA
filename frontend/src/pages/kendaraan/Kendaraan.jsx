@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaIdCard, FaExclamationTriangle, FaCalendarAlt, FaCheckCircle, FaCar } from "react-icons/fa";
+import { FaIdCard, FaExclamationTriangle, FaCalendarAlt, FaCheckCircle, FaCar, FaEye, FaEdit, FaTrash, FaClock } from "react-icons/fa";
 import kendaraanService from "../../services/kendaraanService";
 import { PRESET_ASAL_KENDARAAN } from "../../utils/constants";
 
@@ -366,7 +366,11 @@ function Kendaraan() {
 
     const getStnkBadge = (dateStr) => {
         if (!dateStr) {
-            return <span className="badge bg-light text-muted border py-1 px-2" style={{ fontSize: "11px" }}>Belum Diisi</span>;
+            return (
+                <span className="badge bg-light text-muted border px-2 py-1" style={{ fontSize: "11px", fontWeight: "normal" }}>
+                    Belum Diisi
+                </span>
+            );
         }
 
         const today = new Date();
@@ -375,31 +379,58 @@ function Kendaraan() {
         target.setHours(0, 0, 0, 0);
         const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
 
-        const formatted = target.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+        const formatted = target.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
 
         if (diffDays < 0) {
             return (
-                <span className="badge bg-danger py-1 px-2" title={`Kedaluwarsa ${Math.abs(diffDays)} hari yang lalu`} style={{ fontSize: "11px" }}>
-                    Lewat {Math.abs(diffDays)} hr ({formatted})
+                <span
+                    className="badge rounded-pill d-inline-flex align-items-center gap-1 px-2 py-1 shadow-xs"
+                    style={{ backgroundColor: "#fee2e2", color: "#991b1b", border: "1px solid #fecaca", fontSize: "11px" }}
+                    title={`Kedaluwarsa ${Math.abs(diffDays)} hari yang lalu`}
+                >
+                    <FaExclamationTriangle size={10} />
+                    <span>Lewat {Math.abs(diffDays)} hr</span>
+                    <span className="opacity-75">({formatted})</span>
                 </span>
             );
         } else if (diffDays <= 30) {
             return (
-                <span className="badge bg-warning text-dark py-1 px-2" title={`Jatuh tempo dalam ${diffDays} hari`} style={{ fontSize: "11px" }}>
-                    Sisa {diffDays} hr ({formatted})
+                <span
+                    className="badge rounded-pill d-inline-flex align-items-center gap-1 px-2 py-1 shadow-xs"
+                    style={{ backgroundColor: "#fef3c7", color: "#92400e", border: "1px solid #fde68a", fontSize: "11px" }}
+                    title={`Jatuh tempo dalam ${diffDays} hari`}
+                >
+                    <FaClock size={10} />
+                    <span>Sisa {diffDays} hr</span>
+                    <span className="opacity-75">({formatted})</span>
                 </span>
             );
         } else if (diffDays <= 365) {
             const months = Math.ceil(diffDays / 30);
             return (
-                <span className="badge py-1 px-2" style={{ backgroundColor: "#fef3c7", color: "#92400e", border: "1px solid #fde68a", fontSize: "11px" }} title={`Jatuh tempo dalam ${diffDays} hari (~${months} bulan)`}>
-                    ~{months} bln ({formatted})
+                <span
+                    className="badge rounded-pill d-inline-flex align-items-center gap-1 px-2 py-1 shadow-xs"
+                    style={{ backgroundColor: "#eff6ff", color: "#1e40af", border: "1px solid #bfdbfe", fontSize: "11px" }}
+                    title={`Jatuh tempo dalam ${diffDays} hari (sisa ~${months} bulan)`}
+                >
+                    <FaClock size={10} />
+                    <span>Sisa {months} bln</span>
+                    <span className="opacity-75">({formatted})</span>
                 </span>
             );
         } else {
             return (
-                <span className="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" title={`Aktif (${formatted})`} style={{ fontSize: "11px" }}>
-                    {formatted}
+                <span
+                    className="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2 py-1 d-inline-flex align-items-center gap-1 shadow-xs"
+                    title={`Masa berlaku aktif (${formatted})`}
+                    style={{ fontSize: "11px" }}
+                >
+                    <FaCheckCircle size={10} />
+                    <span>{formatted}</span>
                 </span>
             );
         }
@@ -486,29 +517,29 @@ function Kendaraan() {
 
                         <div className="table-responsive">
 
-                            <table className="table table-hover align-middle">
+                            <table className="table table-hover align-middle mb-0">
 
-                                <thead className="table-light">
+                                <thead className="table-light" style={{ fontSize: "0.82rem", textTransform: "uppercase", letterSpacing: "0.03em" }}>
 
                                     <tr>
 
-                                        <th width="60">No</th>
+                                        <th width="50" className="text-center py-3">No</th>
 
-                                        <th>Jenis Kendaraan</th>
+                                        <th width="110" className="py-3">Jenis</th>
 
-                                        <th>Tipe</th>
+                                        <th className="py-3">Tipe Kendaraan</th>
 
-                                        <th>Tahun</th>
+                                        <th width="75" className="text-center py-3">Tahun</th>
 
-                                        <th>Roda</th>
+                                        <th width="85" className="text-center py-3">Roda</th>
 
-                                        <th>Plat Merah</th>
+                                        <th width="130" className="text-center py-3">Plat Merah</th>
 
-                                        <th>Plat Hitam</th>
+                                        <th width="130" className="text-center py-3">Plat Hitam</th>
 
-                                        <th width="200">Masa Berlaku STNK</th>
+                                        <th width="270" className="py-3">Masa Berlaku STNK</th>
 
-                                        <th width="200">Aksi</th>
+                                        <th width="190" className="text-center py-3">Aksi</th>
 
                                     </tr>
 
@@ -520,94 +551,119 @@ function Kendaraan() {
 
                                         filteredData.map((item, index) => (
 
-                                            <tr key={item.id}>
+                                            <tr key={item.id} style={{ transition: "background-color 0.15s ease" }}>
 
-                                                <td>
-
+                                                <td className="text-center text-muted fw-semibold">
                                                     {index + 1}
-
                                                 </td>
 
                                                 <td>
-
-                                                    {item.jenis_kendaraan}
-
+                                                    <span className="fw-medium text-dark">{item.jenis_kendaraan}</span>
                                                 </td>
 
                                                 <td>
+                                                    <div className="fw-bold text-dark" style={{ letterSpacing: "-0.01em" }}>
+                                                        {item.tipe}
+                                                    </div>
+                                                    <div className="small text-muted" style={{ fontSize: "11px" }}>
+                                                        Asal: {item.asal_kendaraan || "-"}
+                                                    </div>
+                                                </td>
 
-                                                    {item.tipe}
+                                                <td className="text-center">
+                                                    <span className="fw-semibold text-secondary">{item.tahun_kendaraan}</span>
+                                                </td>
 
+                                                <td className="text-center">
+                                                    <span className="badge rounded-pill bg-light text-secondary border px-2 py-1 small">
+                                                        {item.jenis_roda || "-"}
+                                                    </span>
+                                                </td>
+
+                                                <td className="text-center">
+                                                    <span
+                                                        className="badge font-monospace fw-bold px-2 py-1 shadow-xs"
+                                                        style={{
+                                                            backgroundColor: "#fee2e2",
+                                                            color: "#991b1b",
+                                                            border: "1px solid #f87171",
+                                                            fontSize: "12px",
+                                                            letterSpacing: "0.5px"
+                                                        }}
+                                                    >
+                                                        {item.plat_merah}
+                                                    </span>
+                                                </td>
+
+                                                <td className="text-center">
+                                                    {item.plat_hitam ? (
+                                                        <span
+                                                            className="badge font-monospace fw-bold px-2 py-1 shadow-xs"
+                                                            style={{
+                                                                backgroundColor: "#1e293b",
+                                                                color: "#ffffff",
+                                                                border: "1px solid #0f172a",
+                                                                fontSize: "12px",
+                                                                letterSpacing: "0.5px"
+                                                            }}
+                                                        >
+                                                            {item.plat_hitam}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-muted small fst-italic">-</span>
+                                                    )}
                                                 </td>
 
                                                 <td>
-
-                                                    {item.tahun_kendaraan}
-
-                                                </td>
-
-                                                <td>
-
-                                                    <span className="badge bg-secondary">{item.jenis_roda || "-"}</span>
-
-                                                </td>
-
-                                                <td>
-
-                                                    <span className="fw-semibold text-danger">{item.plat_merah}</span>
-
-                                                </td>
-
-                                                <td>
-
-                                                    <span className="fw-semibold text-dark">{item.plat_hitam || "-"}</span>
-
-                                                </td>
-
-                                                <td>
-
-                                                    <div className="d-flex flex-column gap-1" style={{ fontSize: "11px" }}>
-                                                        <div className="d-flex align-items-center justify-content-between gap-1">
-                                                            <span className="text-muted fw-semibold">1 Th:</span>
-                                                            {getStnkBadge(item.stnk_tahunan)}
+                                                    <div className="d-flex flex-column gap-1 py-1" style={{ minWidth: "250px" }}>
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <span className="badge bg-light text-secondary border text-nowrap" style={{ minWidth: "58px", fontSize: "10px" }}>
+                                                                Tahunan
+                                                            </span>
+                                                            <div className="flex-grow-1 text-nowrap">
+                                                                {getStnkBadge(item.stnk_tahunan)}
+                                                            </div>
                                                         </div>
-                                                        <div className="d-flex align-items-center justify-content-between gap-1">
-                                                            <span className="text-muted fw-semibold">5 Th:</span>
-                                                            {getStnkBadge(item.stnk_lima_tahunan)}
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <span className="badge bg-light text-secondary border text-nowrap" style={{ minWidth: "58px", fontSize: "10px" }}>
+                                                                5 Tahun
+                                                            </span>
+                                                            <div className="flex-grow-1 text-nowrap">
+                                                                {getStnkBadge(item.stnk_lima_tahunan)}
+                                                            </div>
                                                         </div>
                                                     </div>
-
                                                 </td>
 
-                                                <td>
+                                                <td className="text-center">
+                                                    <div className="d-flex align-items-center justify-content-center gap-1 text-nowrap">
+                                                        <button
+                                                            className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 px-2 py-1 shadow-xs"
+                                                            onClick={() => handleDetail(item.id)}
+                                                            title="Lihat Detail Kendaraan"
+                                                        >
+                                                            <FaEye size={11} />
+                                                            <span>Detail</span>
+                                                        </button>
 
-                                                    <button
-                                                        className="btn btn-info btn-sm me-2 text-white"
-                                                        onClick={() => handleDetail(item.id)}
-                                                    >
+                                                        <button
+                                                            className="btn btn-sm btn-outline-warning d-inline-flex align-items-center gap-1 px-2 py-1 shadow-xs"
+                                                            onClick={() => handleOpenEdit(item.id)}
+                                                            title="Edit Kendaraan"
+                                                        >
+                                                            <FaEdit size={11} />
+                                                            <span>Edit</span>
+                                                        </button>
 
-                                                        Detail
-
-                                                    </button>
-
-                                                    <button
-                                                        className="btn btn-warning btn-sm me-2"
-                                                        onClick={() => handleOpenEdit(item.id)}
-                                                    >
-
-                                                        Edit
-
-                                                    </button>
-
-                                                    <button
-                                                        className="btn btn-danger btn-sm"
-                                                        onClick={() => handleDelete(item.id)}
-                                                    >
-
-                                                        Hapus
-
-                                                    </button>
-
+                                                        <button
+                                                            className="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2 py-1 shadow-xs"
+                                                            onClick={() => handleDelete(item.id)}
+                                                            title="Hapus Kendaraan"
+                                                        >
+                                                            <FaTrash size={11} />
+                                                            <span>Hapus</span>
+                                                        </button>
+                                                    </div>
                                                 </td>
 
                                             </tr>
@@ -619,12 +675,10 @@ function Kendaraan() {
                                         <tr>
 
                                             <td
-                                                colSpan="8"
-                                                className="text-center py-4"
+                                                colSpan="9"
+                                                className="text-center py-4 text-muted"
                                             >
-
                                                 Tidak ada data kendaraan.
-
                                             </td>
 
                                         </tr>
