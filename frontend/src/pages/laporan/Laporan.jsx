@@ -120,7 +120,7 @@ function Laporan() {
 
     const handleFilter = (e) => {
 
-        if (e) e.preventDefault();
+        if (e && e.preventDefault) e.preventDefault();
 
         let data = [...pemeriksaan];
 
@@ -144,17 +144,29 @@ function Laporan() {
 
         // 3. Filter Periode Tanggal
         if (tglMulai !== "") {
-            data = data.filter(item => item.tanggal >= tglMulai);
+            data = data.filter(item => {
+                if (!item.tanggal) return false;
+                const d = item.tanggal.includes("T") ? item.tanggal.split("T")[0] : item.tanggal;
+                return d >= tglMulai;
+            });
         }
 
         if (tglSelesai !== "") {
-            // Ditambahkan '23:59:59' agar include seluruh hari tersebut
-            data = data.filter(item => item.tanggal <= tglSelesai + "T23:59:59");
+            data = data.filter(item => {
+                if (!item.tanggal) return false;
+                const d = item.tanggal.includes("T") ? item.tanggal.split("T")[0] : item.tanggal;
+                return d <= tglSelesai;
+            });
         }
 
         setFilteredPemeriksaan(data);
 
     };
+
+    // Auto-update filter saat parameter filter berubah
+    useEffect(() => {
+        handleFilter();
+    }, [tipeLaporan, selectedKendaraan, asalDropdown, customAsalInput, tglMulai, tglSelesai, pemeriksaan]);
 
     // Reset Filter
     const handleReset = () => {
@@ -258,7 +270,16 @@ function Laporan() {
 
     const handlePrint = () => {
 
-        window.print();
+        if (tipeLaporan === "per_mobil" && !selectedKendaraan) {
+            toast.warning("Silakan pilih kendaraan terlebih dahulu untuk mencetak laporan per mobil.");
+            return;
+        }
+
+        setActivePrintData(null);
+
+        setTimeout(() => {
+            window.print();
+        }, 100);
 
     };
 
@@ -501,9 +522,9 @@ function Laporan() {
                         </button>
 
                         <button
+                            type="button"
                             className="btn btn-success"
                             onClick={handlePrint}
-                            disabled={filteredPemeriksaan.length === 0}
                         >
                             🖨️ Cetak Laporan
                         </button>
