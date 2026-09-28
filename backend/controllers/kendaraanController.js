@@ -30,9 +30,12 @@ const show = asyncHandler(async (req, res) => {
 
 const store = asyncHandler(async (req, res) => {
 
-    if (req.file) {
+    if (req.file && req.file.buffer) {
+        const mime = req.file.mimetype || "image/jpeg";
+        req.body.foto = `data:${mime};base64,${req.file.buffer.toString("base64")}`;
+    } else if (req.file && req.file.filename) {
         req.body.foto = "/uploads/" + req.file.filename;
-    } else {
+    } else if (!req.body.foto) {
         req.body.foto = "";
     }
 
@@ -50,19 +53,38 @@ const update = asyncHandler(async (req, res) => {
 
     const oldKendaraan = await kendaraanService.getById(req.params.id);
 
-    if (req.file) {
+    if (req.file && req.file.buffer) {
+        const mime = req.file.mimetype || "image/jpeg";
+        req.body.foto = `data:${mime};base64,${req.file.buffer.toString("base64")}`;
+
+        // Hapus file lama dari disk jika dulu disimpan sebagai file lokal
+        if (oldKendaraan && oldKendaraan.foto && oldKendaraan.foto.startsWith("/uploads/")) {
+            try {
+                const oldFilePath = path.join(__dirname, "../", oldKendaraan.foto);
+                if (fs.existsSync(oldFilePath)) {
+                    fs.unlinkSync(oldFilePath);
+                }
+            } catch (err) {
+                console.error("Gagal menghapus file lama:", err.message);
+            }
+        }
+    } else if (req.file && req.file.filename) {
         req.body.foto = "/uploads/" + req.file.filename;
 
         // Hapus file lama dari disk
-        if (oldKendaraan.foto && oldKendaraan.foto.startsWith("/uploads/")) {
-            const oldFilePath = path.join(__dirname, "../", oldKendaraan.foto);
-            fs.unlink(oldFilePath, (err) => {
-                if (err) console.error("Gagal menghapus file lama:", err.message);
-            });
+        if (oldKendaraan && oldKendaraan.foto && oldKendaraan.foto.startsWith("/uploads/")) {
+            try {
+                const oldFilePath = path.join(__dirname, "../", oldKendaraan.foto);
+                if (fs.existsSync(oldFilePath)) {
+                    fs.unlinkSync(oldFilePath);
+                }
+            } catch (err) {
+                console.error("Gagal menghapus file lama:", err.message);
+            }
         }
     } else {
         // Jika tidak upload file baru, pertahankan foto lama
-        req.body.foto = oldKendaraan.foto || "";
+        req.body.foto = (oldKendaraan && oldKendaraan.foto) || "";
     }
 
     const kendaraan = await kendaraanService.update(
@@ -84,11 +106,15 @@ const destroy = asyncHandler(async (req, res) => {
     await kendaraanService.remove(req.params.id);
 
     // Hapus file foto dari disk jika ada
-    if (oldKendaraan.foto && oldKendaraan.foto.startsWith("/uploads/")) {
-        const filePath = path.join(__dirname, "../", oldKendaraan.foto);
-        fs.unlink(filePath, (err) => {
-            if (err) console.error("Gagal menghapus file saat hapus kendaraan:", err.message);
-        });
+    if (oldKendaraan && oldKendaraan.foto && oldKendaraan.foto.startsWith("/uploads/")) {
+        try {
+            const filePath = path.join(__dirname, "../", oldKendaraan.foto);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        } catch (err) {
+            console.error("Gagal menghapus file saat hapus kendaraan:", err.message);
+        }
     }
 
     res.status(200).json({

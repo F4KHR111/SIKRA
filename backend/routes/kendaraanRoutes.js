@@ -9,15 +9,8 @@ const authorize = require("../middleware/roleMiddleware");
 
 const kendaraanController = require("../controllers/kendaraanController");
 
-// Konfigurasi Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "../uploads"));
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, "_"));
-    }
-});
+// Konfigurasi Multer menggunakan memoryStorage agar kompatibel dengan Vercel Serverless (read-only filesystem)
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png/;
