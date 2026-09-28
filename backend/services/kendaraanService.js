@@ -21,7 +21,11 @@ const getById = async (id) => {
 
 const create = async (data) => {
 
-    const cekPlat = await kendaraanModel.getByPlatMerah(data.plat_merah);
+    if (!data.plat_merah || data.plat_merah.trim() === "") {
+        throw new AppError("Plat merah wajib diisi!", 400);
+    }
+
+    const cekPlat = await kendaraanModel.getByPlatMerah(data.plat_merah.trim());
 
     if (cekPlat) {
         throw new AppError("Plat merah sudah terdaftar", 400);
@@ -39,6 +43,13 @@ const update = async (id, data) => {
 
     if (!kendaraan) {
         throw new AppError("Data kendaraan tidak ditemukan", 404);
+    }
+
+    if (data.plat_merah && data.plat_merah.trim() !== kendaraan.plat_merah) {
+        const cekPlat = await kendaraanModel.getByPlatMerah(data.plat_merah.trim());
+        if (cekPlat) {
+            throw new AppError("Plat merah sudah terdaftar", 400);
+        }
     }
 
     return await kendaraanModel.update(id, data);

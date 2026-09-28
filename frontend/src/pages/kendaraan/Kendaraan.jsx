@@ -798,8 +798,8 @@ function Kendaraan() {
                                         {/* Plat Merah */}
                                         <div className="col-md-6 mb-3">
 
-                                            <label className="form-label">
-                                                Plat Merah
+                                            <label className="form-label fw-semibold">
+                                                Plat Merah <span className="text-danger">* (Wajib)</span>
                                             </label>
 
                                             <input
@@ -808,6 +808,7 @@ function Kendaraan() {
                                                 name="plat_merah"
                                                 value={form.plat_merah}
                                                 onChange={handleChange}
+                                                placeholder="Contoh: AB 1234 XY"
                                                 required
                                             />
 
@@ -816,8 +817,8 @@ function Kendaraan() {
                                         {/* Plat Hitam */}
                                         <div className="col-md-6 mb-3">
 
-                                            <label className="form-label">
-                                                Plat Hitam
+                                            <label className="form-label fw-semibold">
+                                                Plat Hitam <span className="badge bg-secondary-subtle text-secondary small ms-1">Opsional</span>
                                             </label>
 
                                             <input
@@ -826,7 +827,11 @@ function Kendaraan() {
                                                 name="plat_hitam"
                                                 value={form.plat_hitam}
                                                 onChange={handleChange}
+                                                placeholder="Kosongkan jika tidak ada plat hitam"
                                             />
+                                            <div className="form-text text-muted" style={{ fontSize: "11px" }}>
+                                                Opsional: Khusus kendaraan dinas yang memiliki plat hitam ganda / rahasia.
+                                            </div>
 
                                         </div>
 
@@ -1052,7 +1057,7 @@ function Kendaraan() {
 
                                         <tr>
                                             <th>Plat Hitam</th>
-                                            <td>{detailData.plat_hitam || "-"}</td>
+                                            <td>{detailData.plat_hitam ? detailData.plat_hitam : <span className="text-muted fst-italic">Tidak Ada (Hanya Plat Merah)</span>}</td>
                                         </tr>
 
                                         <tr>
